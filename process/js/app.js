@@ -6,11 +6,9 @@ $(function() {
   var topoffset = 50;
 
   if('serviceWorker' in navigator) {
-    navigator.serviceWorker
-      .register('./service-worker.js')
-      .then(function() {
-        console.log('Service Worker Active');
-      })
+  	navigator.serviceWorker.register('./serviceWorker.js').then(function() {
+  			console.log('Service Worker Active');
+  		});
   }
 
   $.getJSON('/data/pets.json', function(data) {
@@ -20,13 +18,14 @@ $(function() {
     var adoptionTemplate = $('#adoption-template').html();
     var adoptionScript = Handlebars.compile(adoptionTemplate);
 
-    var appointmentsTemplate = $('#appointments-template').html();
-    var appointmentsScript = Handlebars.compile(appointmentsTemplate);
+    var appointmentTemplate = $('#appointments-template').html();
+    var appointmentScript = Handlebars.compile(appointmentTemplate);
 
     $('.loader').fadeOut(1000);
     $('#slideshow-content').append(slideshowScript(data));
     $('#adoption-content').append(adoptionScript(data));
-    $('#appointments-content').append(appointmentsScript(data));
+    $('#appointments-content').append(appointmentScript(data));
+
 
     //replace IMG inside carousels with a background image
     $('#slideshow .item img').each(function() {
@@ -54,14 +53,15 @@ $(function() {
     }
   });
 
+  // dynamic modal creation
   $(document).on('click', '.openpetmodal', function() {
-    $('.modal-petname').html($(this).data('petname'));
-    $('.modal-petbreed').html($(this).data('petbreed'));
-    $('.modal-petowner').html($(this).data('petowner'));
-    $('.modal-petinfo').html($(this).data('petinfo'));
-    $('.modal-petimage').attr('src', 'images/pets/' + $(this).data('petimage')+ '.jpg');
-    $('.modal-petimage').attr('alt', $(this).data('petname')+ ' photo');
-  });
+  	$('.modal-petname').html($(this).data('petname'));
+  	$('.modal-petbreed').html($(this).data('petname'));
+  	$('.modal-petinfo').html($(this).data('petinfo'));
+  	$('.modal-petowner').html($(this).data('petowner'));
+  	$('.modal-petimage').attr('src', 'images/pets/' + $(this).data('petimage') + '.jpg');
+  	$('.modal-petimage').attr('alt', $(this).data('petname') + 'photo');
+  })
 
   //Use smooth scrolling when clicking on navigation
   $('.navbar a').click(function() {

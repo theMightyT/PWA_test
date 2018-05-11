@@ -15,12 +15,11 @@ var src = './process',
     environment = 'production';
 
 gulp.task('generate-service-worker', function(callback) {
-  swPrecache.write(path.join(dest, 'service-worker.js'), {
-    staticFileGlobs: [ dest + '/**/*.{js,html,json,css,png,jpg,gif,svg,eot,ttf,woff}'],
+  swPrecache.write(path.join(dest, 'serviceWorker.js'), {
+    staticFileGlobs: [ dest + '/**/*.{js,html,json,css,jpg,png,gif,svg,eot,ttf,woff}'], 
     stripPrefix: dest
   }, callback);
 });
-
 
 gulp.task('js', function() {
   return gulp.src(src + '/js/app.js')
@@ -43,12 +42,12 @@ gulp.task('css', function() {
 });
 
 gulp.task('watch', function() {
-    gulp.watch([src + '/js/**/*', dest + '/data/**/*'], ['generate-service-worker','js']);
-    gulp.watch(src + '/css/*.css', ['generate-service-worker','css']);
-    gulp.watch(dest + '/*.html', ['generate-service-worker','html']);
+    gulp.watch([src + '/js/**/*', dest + '/data/**/*'], ['generate-service-worker', 'js']);
+    gulp.watch(src + '/css/*.css', ['generate-service-worker', 'css']);
+    gulp.watch(dest + '/*.html', ['generate-service-worker', 'html']);
 });
 
-gulp.task('webserver', ['generate-service-worker','html', 'css', 'js'], function() {
+gulp.task('webserver', ['generate-service-worker', 'html', 'css', 'js'], function() {
   gulp.src(dest)
   .pipe(webserver({
       livereload: true,
