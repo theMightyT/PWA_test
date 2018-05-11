@@ -5,12 +5,26 @@ var Handlebars = require('handlebars');
 $(function() {
   var topoffset = 50;
 
+  if('serviceWorker' in navigator) {
+  	navigator.serviceWorker.register('./serviceWorker.js').then(function() {
+  			console.log('Service Worker Active');
+  		});
+  }
+
   $.getJSON('/data/pets.json', function(data) {
     var slideshowTemplate = $('#slideshow-template').html();
     var slideshowScript = Handlebars.compile(slideshowTemplate);
 
+    var adoptionTemplate = $('#adoption-template').html();
+    var adoptionScript = Handlebars.compile(adoptionTemplate);
+
+    var appointmentTemplate = $('#appointments-template').html();
+    var appointmentScript = Handlebars.compile(appointmentTemplate);
+
     $('.loader').fadeOut(1000);
     $('#slideshow-content').append(slideshowScript(data));
+    $('#adoption-content').append(adoptionScript(data));
+    $('#appointments-content').append(appointmentScript(data));
 
     //replace IMG inside carousels with a background image
     $('#slideshow .item img').each(function() {
@@ -25,6 +39,10 @@ $(function() {
     });
   });
 
+  $('.reload').click(function() {
+    window.location.reload();
+  });
+
   $('.navbar-fixed-top').on('activate.bs.scrollspy', function() {
     var hash = $(this).find('li.active a').attr('href');
     if (hash !== '#slideshow') {
@@ -33,6 +51,16 @@ $(function() {
       $('header nav').removeClass('inbody');
     }
   });
+
+  // dynamic modal creation
+  $(document).on('click', '.openpetmodal', function() {
+  	$('.modal-petname').html($(this).data('petname'));
+  	$('.modal-petbreed').html($(this).data('petname'));
+  	$('.modal-petinfo').html($(this).data('petinfo'));
+  	$('.modal-petowner').html($(this).data('petowner'));
+  	$('.modal-petimage').attr('src', 'images/pets/' + $(this).data('petimage') + '.jpg');
+  	$('.modal-petimage').attr('alt', $(this).data('petname') + 'photo');
+  })
 
   //Use smooth scrolling when clicking on navigation
   $('.navbar a').click(function() {
